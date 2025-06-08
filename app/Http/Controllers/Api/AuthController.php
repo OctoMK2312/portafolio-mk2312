@@ -52,6 +52,10 @@ class AuthController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => $request->password,
+            'role' => User::ROLE_USER,
+            'bio' => $request->bio ?? null,
+            'profile_picture' => $request->profile_picture ?? 'avatars/default.png',
+            'active' => true,
         ]);
         return response()->json([
             'message' => 'Usuario registrado exitosamente.',
