@@ -1,18 +1,17 @@
 <?php
-// app/Http/Requests/StoreCategoryRequest.php
+
 namespace App\Http\Requests;
 
-use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCategoryRequest extends FormRequest
+class UpdateCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Category::class);
+        return $this->user()->can('update', $this->route('category'));
     }
 
     /**
@@ -22,19 +21,22 @@ class StoreCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        $categoryId = $this->route('category')->id;
+
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'slug' => 'required|string|max:255|unique:categories,slug',
+            'slug' => 'required|string|max:255|unique:categorys,slug,' . $categoryId,
             'parent_id' => 'nullable|exists:categorys,id',
         ];
     }
 
     /**
      * Get the custom validation messages.
-     *
+     * 
      * @return array<string, string>
      */
+
     public function messages(): array
     {
         return [
@@ -45,4 +47,5 @@ class StoreCategoryRequest extends FormRequest
             'parent_id.exists' => 'La categoría padre debe existir.',
         ];
     }
+
 }

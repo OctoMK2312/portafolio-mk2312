@@ -2,28 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\Category;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class CategoryPolicy
+class PostPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        // Cualquiera puede ver el listado de categorías.
-        return true;
+        return true; // Allow viewing all posts for all users
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Category $category): bool
+    public function view(User $user, Post $post): bool
     {
-        // Cualquiera puede ver una categoría específica.
-        return true;
+        return true; // Allow viewing posts for all users
     }
 
     /**
@@ -31,14 +29,13 @@ class CategoryPolicy
      */
     public function create(User $user): bool
     {
-        // Solo los administradores pueden crear categorías.
-        return $user->role === 'admin'; // Asumiendo que tienes un campo 'role' en tu modelo User
+        return $user->role === 'admin';
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Category $category): bool
+    public function update(User $user, Post $post): bool
     {
         return $user->role === 'admin';
     }
@@ -46,9 +43,8 @@ class CategoryPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Category $category): bool
+    public function delete(User $user, Post $post): bool
     {
-        // Solo los administradores pueden borrar categorías.
         return $user->role === 'admin';
     }
 }

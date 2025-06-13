@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\User;
 use App\Policies\CategoryPolicy;
+use App\Policies\PostPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,5 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Aquí registras tus policies
         Gate::policy(Category::class, CategoryPolicy::class);
+        Gate::policy(Post::class, PostPolicy::class);
+
     }
 }

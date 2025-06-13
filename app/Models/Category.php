@@ -10,9 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Category extends Model
 {
     use HasFactory;
-
-    protected $table = 'categorys'; // Asegúrate de que el nombre de la tabla es correcto
-
     protected $fillable = [
         "name",
         "description",
