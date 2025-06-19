@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -53,7 +54,7 @@ class PostController extends Controller
         $validatedData = $request->validated();
 
         if ($request->hasFile('featured_image')) {
-            $path = $request->file('featured_image')->store('public/posts');
+            $path = $request->file('featured_image')->store("posts/{$request->user()->id}", 'public');
             $validatedData['featured_image_url'] = Storage::url($path);
         }
 
@@ -73,7 +74,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $this->authorize('view', Post::class);
+        $this->authorize('view', $post);
 
         $post->load(['user', 'category']);
 
@@ -83,9 +84,32 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $validatedData = $request->validated();
+
+        if ($request->hasFile('featured_image')) {
+            if ($post->featured_image_url) {
+
+                $oldUrl = $post->featured_image_url;
+                $oldPath = str_replace('/storage/', '', parse_url($oldUrl, PHP_URL_PATH));
+                Storage::disk('public')->delete($oldPath);
+            }
+
+            $path = $request->file('featured_image')->store('posts/' . $request->user()->id, 'public');
+            $validatedData['featured_image_url'] = Storage::url($path);
+        }
+
+        if (isset($validatedData['title'])) {
+            $validatedData['slug'] = Str::slug($validatedData['title']);
+        }
+
+        $post->update($validatedData);
+
+        return response()->json([
+            'message' => 'Post actualizado exitosamente.',
+            'data' => new PostResource($post->load(['user', 'category']))
+        ]);
     }
 
     /**
@@ -93,6 +117,17 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->authorize('delete', Post::findOrFail($id));
+        $post = Post::where('status', 'draft')->findOrFail($id);
+        if ($post->featured_image_url) {
+            $oldUrl = $post->featured_image_url;
+            $oldPath = str_replace('/storage/', '', parse_url($oldUrl, PHP_URL_PATH));
+            Storage::disk('public')->delete($oldPath);
+        }
+        $post->delete();
+        return response()->json([
+            'message' => 'Post eliminado exitosamente.',
+        ], 204);
+
     }
 }

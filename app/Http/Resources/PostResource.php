@@ -17,10 +17,13 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'excerpt' => $this->excerpt,
             'slug' => $this->slug,
             'content' => $this->content,
             'status' => $this->status,
             'published_at' => $this->published_at?->toIso8601String(),
+            'featured_image_url' => $this->featured_image_url,
+            'allow_comments' => $this->allow_comments,
             'author' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
