@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::apiResource('/categories', CategoryController::class);
     Route::apiResource('/post', PostController::class);
+    Route::get('/posts/{post}/comments', [CommentController::class, 'index'])->name('posts.comments.index');
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('posts.comments.store');
 });
 
 Route::post('/final-debug-upload', function (Request $request) {

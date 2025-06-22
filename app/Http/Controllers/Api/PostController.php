@@ -26,6 +26,7 @@ class PostController extends Controller
         $query = Post::query();
 
         $query->with(['user', 'category']);
+        $query->withCount('comments');
 
         if (!$request->user()->isAdmin()) {
             $query->where(function ($q) use ($request) {

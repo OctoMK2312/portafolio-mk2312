@@ -30,6 +30,8 @@ class PostResource extends JsonResource
                 'last_name' => $this->user->last_name,
                 'username' => $this->user->username,
             ],
+            'comments_count' => $this->whenCounted('comments'), // Contamos los comentarios
+            'comment' => new CommentResource($this->whenLoaded('comments')), // Reutilizamos el resource de comentario
             'category' => new CategoryResource($this->whenLoaded('category')), // Reutilizamos el resource de categoría
             'created_at' => $this->created_at->toIso8601String(),
             'updated_at' => $this->updated_at->toIso8601String(),
