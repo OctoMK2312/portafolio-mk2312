@@ -3,5 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    abort(401);
+    return redirect(env('FRONTEND_URL') ?: 'http://localhost:4321');
 });
+
