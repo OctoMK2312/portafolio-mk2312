@@ -3,12 +3,14 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\api\ContactController;
 use App\Http\Controllers\Api\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post("/register", [AuthController::class, "register"]);
 Route::post("/login", [AuthController::class, "login"]);
+Route::post("/contact", [ContactController::class, "sendMail"]);
 
 //Creamos la coleccion de rutas con el middleware de autenticacion
 Route::middleware('auth:sanctum')->group(function () {
